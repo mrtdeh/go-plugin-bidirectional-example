@@ -1,6 +1,7 @@
 
 
-
+proto:
+	buf generate
 build:
 	go build -o server
 
