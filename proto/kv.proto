@@ -1,0 +1,29 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
+syntax = "proto3";
+package proto;
+option go_package = "./proto";
+
+
+message GetInfoResponse {
+    string info = 1;
+}
+
+message ConnectRequest {
+    uint32 server_id = 1;
+}
+
+message PongResponse{}
+
+message Empty {}
+
+
+service Plugin {
+    rpc Connect(ConnectRequest) returns (Empty);
+    rpc Ping(Empty) returns (PongResponse);
+}
+
+service Maintainer {
+    rpc GetInfo(Empty) returns (GetInfoResponse);
+}
