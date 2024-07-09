@@ -14,6 +14,17 @@ import (
 	"github.com/hashicorp/go-plugin"
 )
 
+type PluginImplementation struct {
+	m Maintainer
+}
+
+func (p *PluginImplementation) Connect(a Maintainer) error {
+	p.m = a
+	return nil
+}
+func (p *PluginImplementation) Ping() string              { return "pong" }
+func (p *PluginImplementation) GetMaintainer() Maintainer { return p.m }
+
 // Handshake is a common handshake that is shared by plugin and host.
 var Handshake = plugin.HandshakeConfig{
 	ProtocolVersion:  1,

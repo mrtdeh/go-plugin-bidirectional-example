@@ -4,7 +4,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"mrtdeh/plugin/shared"
 	"time"
@@ -14,34 +13,18 @@ import (
 
 // Here is a real implementation of KV that writes to a local file with
 // the key name and the contents are the value of the key.
-type PluginWrapper struct {
-	pm shared.Maintainer
-}
-
-func (k *PluginWrapper) Connect(a shared.Maintainer) error {
-
-	r, err := a.GetInfo()
-	if err != nil {
-		return err
-	}
-
-	fmt.Println("get info from main : ", r)
-	k.pm = a
-	return nil
-}
-
-func (k *PluginWrapper) Ping() string {
-	return "pong"
+type AliReza struct {
+	shared.PluginImplementation
 }
 
 func main() {
-	var a = &PluginWrapper{}
+	var ali = &AliReza{}
 
 	go func() {
 		for {
 			time.Sleep(time.Second * 1)
-			if a.pm != nil {
-				_, err := a.pm.GetInfo()
+			if pm := ali.GetMaintainer(); pm != nil {
+				_, err := pm.GetInfo()
 				if err != nil {
 					log.Fatal("error in getInfo : ", err)
 				}
@@ -52,7 +35,7 @@ func main() {
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: shared.Handshake,
 		Plugins: map[string]plugin.Plugin{
-			"sample-plugin": &shared.DefaultPlugin{Impl: a},
+			"sample-plugin": &shared.DefaultPlugin{Impl: ali},
 		},
 
 		// A non-nil value here enables gRPC serving for this plugin...
